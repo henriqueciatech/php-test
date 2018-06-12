@@ -1,0 +1,19 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    field.cattle.io/creatorId: u-vlb2l
+    field.cattle.io/ingressState: '{"aW5ncmVzcy1waHAtdGVzdC93ZWItYXBwbGljYXRpb25zL3BocC10ZXN0LnJhbmNoZXIuY2lhdGVjaC5jb20uYnIvLzgw":"deployment:web-applications:php-test"}'
+    field.cattle.io/publicEndpoints: '[{"addresses":["10.0.0.26"],"port":80,"protocol":"HTTP","serviceName":"web-applications:ingress-php-test","ingressName":"web-applications:ingress-php-test","hostname":"php-test.rancher.ciatech.com.br","allNodes":true}]'
+  generation: 1
+  name: ingress-php-test
+  namespace: web-applications
+  selfLink: /apis/extensions/v1beta1/namespaces/web-applications/ingresses/ingress-php-test
+spec:
+  rules:
+  - host: php-test.rancher.ciatech.com.br
+    http:
+      paths:
+      - backend:
+          serviceName: ingress-php-test
+          servicePort: 80

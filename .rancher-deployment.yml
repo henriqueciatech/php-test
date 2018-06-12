@@ -1,0 +1,30 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  labels:
+    workload.user.cattle.io/workloadselector: deployment-default-php-test
+  name: php-test
+  namespace: web-applications
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      workload.user.cattle.io/workloadselector: deployment-default-php-test
+  template:
+    metadata:
+      annotations:
+        field.cattle.io/ports: '[[{"containerPort":80,"dnsName":"php-test-nodeport","kind":"NodePort","name":"80tcp01","protocol":"TCP"}]]'
+        field.cattle.io/publicEndpoints: '[{"addresses":["10.0.0.26"],"allNodes":true,"port":32683,"protocol":"TCP","serviceId":"web-applications:ingress-27e06d781812714a325f7b24739c68c0"},{"addresses":["10.0.0.26"],"allNodes":true,"hostname":"php-test.rancher.ciatech.com.br","ingressId":"web-applications:php-test","port":80,"protocol":"HTTP","serviceId":"web-applications:ingress-27e06d781812714a325f7b24739c68c0"},{"addresses":["10.0.0.26"],"allNodes":true,"port":31653,"protocol":"TCP","serviceId":"web-applications:php-test-nodeport"}]'
+      labels:
+        workload.user.cattle.io/workloadselector: deployment-default-php-test
+    spec:
+      containers:
+      - image: ciatechrancher/php-test
+        name: php-test
+        ports:
+        - containerPort: 80
+          name: 80tcp01
+          protocol: TCP
+      dnsPolicy: ClusterFirst
+      imagePullSecrets:
+      - name: dc-qw9w8

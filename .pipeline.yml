@@ -1,0 +1,29 @@
+name: pipeline-php-test
+stages:
+- name: clone
+  steps:
+  - sourceCodeConfig:
+      branch: master
+      branchCondition: only
+      url: https://github.com/henriqueciatech/php-test.git
+- name: build
+  steps:
+  - runScriptConfig:
+      image: busybox:latest
+      isShell: true
+      shellScript: ls
+- name: publish
+  steps:
+  - publishImageConfig:
+      buildContext: .
+      dockerfilePath: ./Dockerfile
+      tag: ciatechrancher/build:${CICD_EXECUTION_SEQUENCE}
+- name: deploy
+  steps:
+  - runScriptConfig:
+      image: byrnedo/alpine-curl
+      isShell: true
+      shellScript: 'curl --fail -H "docker-image: ciatechrancher/build:${CICD_EXECUTION_SEQUENCE}" -F "deployment=@.rancher-deployment.yml"
+        -F "ingress=@.rancher-ingress.yml" -X POST http://deploy.rancher.ciatech.com.br/deploy/'
+triggerWebhookPush: true
+triggerWebhookTag: true
